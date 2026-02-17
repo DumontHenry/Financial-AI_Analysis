@@ -1,310 +1,235 @@
-# 📊 Financial AI Agent System - Complete Guide
+# 🤖 Financial AI Agent System
 
-**Version 2.0** | Python 3.10+ | February 2026
+> **Conversational AI financial advisor** — talk to it naturally, get institutional-grade analysis on any stock, ETF, or index worldwide.
 
----
-
-## 🎯 What This System Does
-
-Automated financial analysis system that:
-- ✅ Fetches comprehensive company data from multiple sources
-- ✅ Analyzes financial statements and ratios
-- ✅ Tracks news and sentiment
-- ✅ Generates AI-powered investment recommendations
-- ✅ Creates SWOT analysis and price targets
-
-**One command, complete insights.**
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue) ![Azure OpenAI](https://img.shields.io/badge/Azure-OpenAI-0078D4) ![FMP](https://img.shields.io/badge/Data-FMP%20%2B%20Web-green) ![Teams](https://img.shields.io/badge/Deploy-Microsoft%20Teams-purple) ![Version](https://img.shields.io/badge/Version-3.0-orange)
 
 ---
 
-## 🚀 Quick Start (3 Steps)
+## ✨ What Makes This Different
 
-### 1. Install Dependencies
-```bash
-pip install agent-framework requests python-dotenv fastmcp pydantic
+Unlike tools that require exact ticker symbols, this agent **finds any company dynamically**:
+
+```
+You: Analyze Volkswagen
+→ 🔍 Searching for 'volkswagen'...
+→ ✓ Found: VWAGY — Volkswagen AG (OTC)
+→ 📊 Running full analysis...
 ```
 
-### 2. Configure API Keys
+No hardcoded company list. No mapping files. Just ask naturally.
 
-Create `.env` file:
+---
+
+## 🚀 Quick Start
+
+### 1. Install
+
 ```bash
-# Azure OpenAI (Get from portal.azure.com)
+pip install agent-framework requests python-dotenv fastmcp pydantic
+pip install ddgs feedparser aiohttp botbuilder-core
+```
+
+### 2. Configure `.env`
+
+```env
+# Azure OpenAI (required)
 AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_API_KEY=your-azure-api-key
+AZURE_OPENAI_API_KEY=your-key
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
 AZURE_OPENAI_FAST_DEPLOYMENT=gpt-4o-mini
 AZURE_OPENAI_REASONING_DEPLOYMENT=gpt-4o
 
-# Financial Data (Get from financialmodelingprep.com)
+# Financial Modeling Prep (required) — financialmodelingprep.com
 FMP_API_KEY=your-fmp-key
 
-# Optional: Alpha Vantage fallback
+# NewsAPI (recommended, free) — newsapi.org
+NEWSAPI_KEY=your-newsapi-key
+
+# Alpha Vantage (optional fallback) — alphavantage.co
 ALPHA_VANTAGE_API_KEY=your-av-key
+
+# Microsoft Teams (only for Teams deployment)
+MICROSOFT_APP_ID=your-app-id
+MICROSOFT_APP_PASSWORD=your-client-secret
 ```
 
-**Free API Keys:**
-- FMP: 300 calls/day free tier
-- Alpha Vantage: 25 calls/day free tier
+### 3. Run
 
-### 3. Run Analysis
 ```bash
 python magentic_agent_enhanced.py
-# Enter ticker: AAPL
-# Wait 1-2 minutes
-# Get complete analysis!
+```
+
+```
+💬 You: hello
+🤖 👋 Hello! I'm your AI Financial Advisor. Just ask naturally!
+
+💬 You: tell me about Palantir
+→ 🔍 Searching for 'palantir'...
+→ ✓ Found: PLTR — Palantir Technologies (NASDAQ)
+→ 📊 Analyzing PLTR...
+
+💬 You: should I buy it?
+🤖 Based on my analysis of PLTR... ✅ Recommendation: Buy
 ```
 
 ---
 
-## 📁 System Architecture
+## 💬 Conversational Interface
 
-### Core Files (14 files)
+No commands. No menus. Just natural language.
 
-**Main System (5 files)**
-```
-magentic_agent_enhanced.py    # Main orchestrator - RUN THIS
-tools_enhanced.py              # 24 financial data tools
-financial_agents.py            # Specialized AI agents
-chat_client_factory.py         # Azure OpenAI client
-agent_dependencies.py          # Configuration
-```
-
-**Individual Agents (6 files)**
-```
-init_agent.py                  # Initialize sessions
-entity_agent.py                # Company data enrichment
-fetch_news.py                  # News fetching
-sentiment_agent.py             # Sentiment analysis
-inspector_agent.py             # Data validation
-orchestrator_decision_agent.py # Workflow decisions
-```
-
-**Testing (3 files)**
-```
-test_azure_connection.py       # Test Azure setup
-test_alpha_vantage.py          # Test Alpha Vantage
-setup_verification.py          # Verify complete setup
-```
-
-### Data Flow
-
-```
-User Input (Ticker)
-    ↓
-[InitAgent] ───────→ Create unique session ID (GUID)
-    ↓
-[EntityAgent] ─────→ Fetch company profile & fundamentals
-    ↓
-[NewsAgent] ───────→ Get recent news articles (20)
-    ↓
-[SentimentAgent] ──→ Analyze news sentiment
-    ↓
-[FinancialDataAgent] → Extract comprehensive financial data
-    ├→ Income Statements
-    ├→ Balance Sheets
-    ├→ Cash Flow Statements
-    ├→ Key Metrics & Ratios
-    ├→ Historical Prices
-    ├→ Analyst Estimates
-    ├→ Insider Trading
-    ├→ Institutional Holdings
-    └→ SEC Filings
-    ↓
-[FinancialAnalysisAgent] → Generate investment analysis
-    ├→ Valuation Assessment
-    ├→ Financial Health Rating
-    ├→ Growth Metrics
-    └→ SWOT Analysis
-    ↓
-[InspectorAgent] ──→ Validate data quality
-    ↓
-Final Report (JSON)
-```
+| What you say | What happens |
+|---|---|
+| `"hello"` / `"hi"` / `"helo"` | Friendly greeting, no accidental analysis |
+| `"Analyze Volkswagen"` | Finds VWAGY, runs full analysis |
+| `"Tell me about Palantir"` | Finds PLTR, gives research overview |
+| `"Latest news about BMW"` | Searches and displays recent news |
+| `"Should I buy Tesla?"` | Full analysis + investment recommendation |
+| `"What is the ticker of Porsche?"` | Looks up ticker live via FMP |
+| `"Why?"` / `"Tell me more"` | Context-aware follow-up using previous analysis |
+| `"Analyze S&P 500"` | ETF/index analysis (SPY) |
+| `"Compare Apple vs Microsoft"` | Side-by-side comparison |
 
 ---
 
-## 🛠️ Available Tools (24 Total)
+## 🔍 Smart Ticker Resolution
 
-### Primary: FMP API (13 tools)
+The agent **never uses a hardcoded company map**. It resolves any company dynamically:
 
-```python
-fmp_get_profile(symbol)              # Company profile & fundamentals
-fmp_quote(symbol)                    # Real-time quote
-fmp_get_financials(symbol, period)   # Financial statements
-fmp_get_key_metrics(symbol)          # Key performance metrics
-fmp_get_ratios(symbol)               # Financial ratios
-fmp_get_historical_prices(symbol)    # Price history (1 year default)
-fmp_stock_news(symbol, limit)        # Recent news articles
-fmp_get_analyst_estimates(symbol)    # Analyst forecasts
-fmp_get_insider_trading(symbol)      # Insider transactions
-fmp_get_institutional_holders(symbol)# Institutional ownership
-fmp_get_sec_filings(symbol)          # SEC filings (10-K, 10-Q, 8-K)
-fmp_get_earnings_calendar(symbol)    # Earnings dates
-fmp_search_symbol(query)             # Search for tickers
+```
+Step 1 → Explicit patterns   $AAPL · (TSLA) · bare CAPS like "VW"
+Step 2 → Index shorthands    S&P 500 → SPY · Nasdaq → QQQ · Dow → DIA
+Step 3 → FMP live search     50,000+ symbols worldwide
+Step 4 → Web fallback        DuckDuckGo + Google News RSS
 ```
 
-### Fallback: Alpha Vantage (11 tools)
-
-```python
-av_get_quote(symbol)                 # Real-time quote
-av_get_company_overview(symbol)      # Company fundamentals
-av_get_income_statement(symbol)      # Income statements
-av_get_balance_sheet(symbol)         # Balance sheets
-av_get_cash_flow(symbol)             # Cash flow statements
-av_get_time_series_daily(symbol)     # Historical prices (20+ years)
-av_search_symbol(keywords)           # Symbol search
-av_get_earnings(symbol)              # Earnings data
-av_healthcheck()                     # Test API connection
-```
-
-### Hybrid Tools (2 tools)
-
-```python
-hybrid_get_quote(symbol)             # FMP first, AV fallback
-hybrid_get_company_info(symbol)      # FMP first, AV fallback
-```
-
-**How Hybrid Works:**
-1. Try FMP API first (primary)
-2. If fails → Try Alpha Vantage (fallback)
-3. Return data with source tracking
+This means it works for **any company in any country**, including new listings.
 
 ---
 
-## 🤖 AI Agents
+## 📊 ETF & Index Support
 
-### Standard Model Agents (gpt-4o)
-**InitAgent** - Creates unique session IDs
-**EntityAgent** - Enriches company data (ticker, ISIN, description)
+Ask about any major index or ETF by name:
 
-### Fast Model Agents (gpt-4o-mini)
-**NewsAgent** - Fetches articles quickly
-**WebScraperAgent** - Simple data extraction
-
-### Reasoning Model Agents (gpt-4o)
-**FinancialDataAgent** - Comprehensive data extraction
-**FinancialAnalysisAgent** - Investment recommendations
-**SentimentAgent** - News sentiment analysis
-**InspectorAgent** - Data quality validation
-**OrchestratorAgent** - Workflow decisions
+| Indices | Sector ETFs | Commodity | Popular |
+|---|---|---|---|
+| S&P 500 → SPY | Technology → XLK | Gold → GLD | ARK Innovation → ARKK |
+| Nasdaq → QQQ | Healthcare → XLV | Oil → USO | Vanguard Total → VTI |
+| Dow Jones → DIA | Financials → XLF | Treasury → TLT | Emerging Markets → EEM |
+| Russell 2000 → IWM | Energy → XLE | Bonds → AGG | Real Estate → VNQ |
 
 ---
 
-## 📊 Output Structure
+## 📰 News & Sentiment
 
-```json
-{
-  "guid": "unique-session-id",
-  "finance": {
-    "ticker": "AAPL",
-    "description": "Apple Inc.",
-    "price": 185.50,
-    "currency": "USD",
-    "marketCap": 2850000000000,
-    "peRatio": 30.5,
-    "sector": "Technology",
-    "industry": "Consumer Electronics",
-    "beta": 1.25,
-    "News_Sentiment": "Positive"
-  },
-  "summary_sentiment": {
-    "sentiment": "Positive",
-    "summary_bullets": [
-      "Strong iPhone sales in Q4 2025",
-      "Services revenue growing 15% YoY",
-      "Positive analyst outlook for 2026"
-    ]
-  },
-  "financial_data": {
-    "data_fetched": [
-      "profile", "financials", "ratios", 
-      "key_metrics", "historical_prices"
-    ],
-    "summary": {
-      "company_name": "Apple Inc.",
-      "current_price": 185.50,
-      "market_cap": 2850000000000,
-      "pe_ratio": 30.5
-    }
-  },
-  "analysis": {
-    "recommendation": "Buy",
-    "price_target": 210.00,
-    "confidence_level": "High",
-    "valuation": {
-      "current_pe": 30.5,
-      "sector_avg_pe": 25.0,
-      "rating": "Fair"
-    },
-    "financial_health": {
-      "debt_to_equity": 1.8,
-      "current_ratio": 1.0,
-      "rating": "Strong"
-    },
-    "growth_metrics": {
-      "revenue_growth_yoy": 8.5,
-      "earnings_growth_yoy": 12.0,
-      "rating": "Moderate"
-    },
-    "swot": {
-      "strengths": [
-        "Strong brand and ecosystem",
-        "High profit margins",
-        "Growing services revenue"
-      ],
-      "weaknesses": [
-        "High dependence on iPhone sales",
-        "Premium pricing limits market share"
-      ],
-      "opportunities": [
-        "Expansion in India and emerging markets",
-        "AI integration in products"
-      ],
-      "threats": [
-        "Increased competition",
-        "Regulatory pressures"
-      ]
-    }
-  }
-}
+Every analysis automatically aggregates news from multiple sources:
+
 ```
+FMP stock news          → 12–20 articles
++ NewsAPI               → Bloomberg, Reuters, CNBC, WSJ (free key required)
++ Google News RSS       → always available, no key needed
+─────────────────────────────────────────────────
+Total                   → 20–30 deduplicated articles per analysis
+```
+
+### Sentiment Analysis
+
+The agent analyzes article **content** (not just titles) using explicit rules:
+
+- **Positive** → earnings beat, revenue growth, analyst upgrades, keywords: *surge, rally, beat, outperform*
+- **Negative** → earnings miss, layoffs, downgrades, keywords: *plunge, tumble, miss, decline, weak*
+- **Threshold** → 60%+ positive = Positive · 60%+ negative = Negative · mixed = Neutral
 
 ---
 
-## 💻 Usage Examples
+## 🏗️ Architecture
 
-### Example 1: Basic Analysis
-```python
-import asyncio
-from magentic_agent_enhanced import run_enhanced_financial_pipeline
-
-async def main():
-    result = await run_enhanced_financial_pipeline(
-        user_prompt="Analyze Microsoft",
-        fetch_comprehensive_data=True,
-        perform_analysis=True
-    )
-    
-    print(f"Recommendation: {result['analysis']['recommendation']}")
-    print(f"Price Target: ${result['analysis']['price_target']}")
-
-asyncio.run(main())
+```
+User input (natural language)
+        │
+        ▼
+[Intent Detection]
+   greeting / news / analyze / research / recommendation / ticker_lookup
+        │
+        ▼
+[Ticker Resolution]
+   Explicit → FMP live search → Web fallback
+        │
+        ▼
+[Financial Pipeline]
+   InitAgent → EntityAgent → NewsAgent → SentimentAgent
+        → FinancialDataAgent → FinancialAnalysisAgent
+        │
+        ▼
+[Conversational Response]  →  Terminal / Microsoft Teams
 ```
 
-### Example 2: Command Line (Simplest)
+### Core Files
+
+| File | Purpose |
+|---|---|
+| `magentic_agent_enhanced.py` | **Run this.** Conversational loop, intent detection, ticker resolution |
+| `tools_enhanced.py` | 24 financial tools (FMP + Alpha Vantage + web search) |
+| `financial_agents.py` | FinancialDataAgent + FinancialAnalysisAgent (strict JSON output) |
+| `sentiment_agent_enhanced.py` | Enhanced sentiment with positive/negative rules |
+| `chat_client_factory.py` | Azure OpenAI client factory |
+| `agent_dependencies.py` | Configuration and dependency injection |
+| `teams_bot.py` | Microsoft Teams bot wrapper |
+| `app_teams.py` | Teams bot server (aiohttp, port 3978) |
+
+### Agent Files
+
+| File | Role |
+|---|---|
+| `init_agent.py` | Create unique session GUID |
+| `entity_agent.py` | Enrich company data (ticker, ISIN, description) |
+| `fetch_news.py` | Fetch FMP stock news |
+| `inspector_agent.py` | Data quality validation |
+| `orchestrator_decision_agent.py` | Workflow decisions |
+
+---
+
+## 🛠️ Tools (24 Total)
+
+### FMP API (13 tools)
+`fmp_get_profile` · `fmp_quote` · `fmp_search_symbol` · `fmp_get_financials` · `fmp_get_key_metrics` · `fmp_get_ratios` · `fmp_get_historical_prices` · `fmp_stock_news` · `fmp_get_analyst_estimates` · `fmp_get_insider_trading` · `fmp_get_institutional_holders` · `fmp_get_sec_filings` · `fmp_get_earnings_calendar`
+
+### Alpha Vantage Fallback (8 tools)
+`av_get_quote` · `av_get_company_overview` · `av_get_income_statement` · `av_get_balance_sheet` · `av_get_cash_flow` · `av_get_time_series_daily` · `av_search_symbol` · `av_get_earnings`
+
+### Web Search (3 tools)
+`web_search_news` · `web_search_general` · `web_fetch_url`
+
+---
+
+## 🚀 Microsoft Teams Deployment
+
+```
+Teams User → Teams App
+                │
+          app_teams.py    (Azure App Service, port 3978)
+                │
+          teams_bot.py    (per-user conversation threading)
+                │
+    magentic_agent_enhanced.py
+```
+
+**Deploy in 5 steps:**
+
 ```bash
-python magentic_agent_enhanced.py
-# Enter: AAPL
-# Get: Complete analysis automatically
-```
+# 1. Register bot in Azure Portal → get App ID + Secret
+# 2. Add to .env
+MICROSOFT_APP_ID=your-app-id
+MICROSOFT_APP_PASSWORD=your-client-secret
 
-### Example 3: Compare Stocks
-```python
-tickers = ["AAPL", "MSFT", "GOOGL"]
+# 3. Deploy to Azure App Service
+az webapp up --name your-bot --runtime PYTHON:3.11
 
-for ticker in tickers:
-    result = await run_enhanced_financial_pipeline(ticker)
-    print(f"{ticker}: {result['analysis']['recommendation']}")
+# 4. Set endpoint in Azure Portal
+#    https://your-app.azurewebsites.net/api/messages
+
+# 5. Enable Teams channel → publish
 ```
 
 ---
@@ -312,318 +237,84 @@ for ticker in tickers:
 ## ⚙️ Configuration
 
 ### Azure OpenAI Models
-**Use GPT 4 models due to low pricing**
-**Recommended Setup (Best Balance):**
-```bash
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o      # Standard tasks
-AZURE_OPENAI_FAST_DEPLOYMENT=gpt-4o-mini      # Quick operations
-AZURE_OPENAI_REASONING_DEPLOYMENT=gpt-4o      # Complex analysis
-```
 
-**Budget Setup (Most Economical):**
-```bash
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o-mini
-AZURE_OPENAI_FAST_DEPLOYMENT=gpt-4o-mini
-AZURE_OPENAI_REASONING_DEPLOYMENT=gpt-4o-mini
-```
+| Setup | Chat | Fast | Reasoning |
+|---|---|---|---|
+| **Recommended** | gpt-4o | gpt-4o-mini | gpt-4o |
+| Budget | gpt-4o-mini | gpt-4o-mini | gpt-4o-mini |
+| Premium | gpt-4o | gpt-4o-mini | o1-preview |
 
-**Premium Setup (Best Quality):**
-```bash
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
-AZURE_OPENAI_FAST_DEPLOYMENT=gpt-4o-mini
-AZURE_OPENAI_REASONING_DEPLOYMENT=o1-preview  # Advanced reasoning
-```
+### Storage (auto-created on first run)
 
-
-
-### Storage Directories
-
-```bash
-FINANCE_STATE_DIR=agent_state        # Finance objects
-FINANCE_ARTICLES_DIR=agent_articles  # News articles
+```env
+FINANCE_STATE_DIR=agent_state        # Session objects
+FINANCE_ARTICLES_DIR=agent_articles  # News cache
 FINANCIAL_DATA_DIR=financial_data    # Financial data cache
-```
-
-Auto-created on first run.
-
----
-
-## 🔧 Setup & Verification
-
-### Verify Installation
-```bash
-python setup_verification.py
-```
-
-Checks:
-- ✅ Python version (3.10+ required)
-- ✅ All required files present
-- ✅ Dependencies installed
-- ✅ Environment configured
-- ✅ API keys valid
-
-### Test Azure Connection
-```bash
-python test_azure_connection.py
-```
-
-### Test Alpha Vantage
-```bash
-python test_alpha_vantage.py
 ```
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Common Issues
-
-**Issue: 401 Authentication Error**
-```
-Fix:
-1. Check AZURE_OPENAI_ENDPOINT ends with /
-2. Verify API key is correct
-3. Check deployment names match Azure
-```
-
-**Issue: FMP_API_KEY not set**
-```
-Fix:
-1. Create .env file: cp .env.example .env
-2. Add your FMP API key
-3. Restart Python
-```
-
-**Issue: JSON Parse Error**
-```
-Fix: System now handles this gracefully
-- Continues execution
-- You still get data
-- Analysis may be skipped
-```
-
-**Issue: Module not found**
-```
-Fix:
-pip install agent-framework requests python-dotenv fastmcp pydantic
-```
-
-**Issue: Rate limit exceeded**
-```
-Fix:
-- FMP free tier: 300 calls/day
-- Alpha Vantage free: 25 calls/day
-- Wait or upgrade to paid tier
-```
-
----
-
-## 📈 What's New in v2.0
-
-### ✨ New Features
-
-1. **Alpha Vantage Integration**
-   - 11 new Alpha Vantage tools
-   - Automatic fallback when FMP fails
-   - 2 hybrid tools for reliability
-
-2. **Simplified Interface**
-   - No more confusing menus
-   - Just enter ticker → get analysis
-   - One-command operation
-
-3. **Enhanced Error Handling**
-   - Graceful JSON error recovery
-   - Auto-fix common AI mistakes
-   - Better debug output
-
-4. **Improved Type Safety**
-   - Full type hints (Python 3.10+)
-   - mypy & pyright compatible
-   - Pydantic validation
-
-5. **Better Documentation**
-   - Unified comprehensive guide
-   - Clear examples
-   - Troubleshooting section
-
-### 🔄 Changes from v1.0
-
-| Feature | v1.0 | v2.0 |
-|---------|------|------|
-| Data Sources | FMP only | FMP + Alpha Vantage |
-| Tools | 13 tools | 24 tools |
-| Reliability | Single source | Automatic fallback |
-| Interface | 3 menu options | Direct entry |
-| Error Handling | Basic | Advanced with auto-fix |
-| Documentation | 11 separate files | 1 unified guide |
-
----
-
-## 💡 Best Practices
-
-### 1. API Key Management
-- ✅ Never commit .env to git
-- ✅ Use different keys for dev/prod
-- ✅ Rotate keys periodically
-
-### 2. Cost Optimization
-- ✅ Use gpt-4o-mini for simple tasks
-- ✅ Cache results when possible
-- ✅ Batch requests when analyzing multiple stocks
-
-### 3. Data Quality
-- ✅ Verify ticker before analysis
-- ✅ Check data freshness
-- ✅ Cross-validate from multiple sources
-
-### 4. Error Handling
-- ✅ Always wrap in try-except
-- ✅ Log errors for debugging
-- ✅ Have fallback strategies
-
-### 5. Performance
-- ✅ Use async for multiple stocks
-- ✅ Store results incrementally
-- ✅ Implement caching layer
-
----
-
-## 📞 Getting Help
-
-### Quick Checks
-1. Run `python setup_verification.py`
-2. Check `.env` file exists and has all keys
-3. Verify Azure deployments are active
-4. Test API connections
-
-### Resources
-- Azure OpenAI: https://portal.azure.com
-- FMP API: https://financialmodelingprep.com/developer/docs/
-- Alpha Vantage: https://www.alphavantage.co/documentation/
-
-### Common Commands
-```bash
-# Full verification
-python setup_verification.py
-
-# Test Azure
-python test_azure_connection.py
-
-# Test Alpha Vantage
-python test_alpha_vantage.py
-
-# Check Python version
-python --version
-
-# List installed packages
-pip list
-
-# Reinstall dependencies
-pip install -r requirements.txt --force-reinstall
-```
-
----
-
-## 🎓 Advanced Usage
-
-### Custom Workflows
-```python
-# Skip analysis, just get data
-result = await run_enhanced_financial_pipeline(
-    "AAPL",
-    fetch_comprehensive_data=True,
-    perform_analysis=False  # Skip AI recommendation
-)
-```
-
-### Batch Processing
-```python
-import asyncio
-
-async def analyze_portfolio(tickers):
-    tasks = [
-        run_enhanced_financial_pipeline(ticker)
-        for ticker in tickers
-    ]
-    return await asyncio.gather(*tasks)
-
-results = await analyze_portfolio(["AAPL", "MSFT", "GOOGL"])
-```
-
-### Custom Agents
-```python
-# Add your own specialized agent
-def build_custom_agent(chat_client):
-    return ChatAgent(
-        chat_client=chat_client,
-        name="CustomAgent",
-        instructions="Your custom instructions..."
-    )
-```
+| Issue | Fix |
+|---|---|
+| `401 Authentication Error` | Check `AZURE_OPENAI_ENDPOINT` ends with `/`. Verify key and deployment names. |
+| Agent returns markdown instead of JSON | Use the updated `financial_agents.py` (strict JSON output version). |
+| `RuntimeWarning: duckduckgo_search renamed` | `pip uninstall duckduckgo-search && pip install ddgs` |
+| Ticker not found | Try full company name, add country hint e.g. `"Volkswagen Germany"`, or use ticker directly. |
+| FMP 404 for ETF news | Normal — system automatically uses web news (NewsAPI / Google News). |
+| Sentiment loops 5–10x for ETFs | Normal for ETFs with sparse news. Pipeline still completes. |
+| `Rate limit exceeded` | FMP free: 300 calls/day. Alpha Vantage free: 25 calls/day. |
 
 ---
 
 ## ✅ Production Checklist
 
-Before deploying to production:
-
-- [ ] All API keys configured
+- [ ] All API keys set in `.env`
 - [ ] Azure OpenAI models deployed
-- [ ] Setup verification passes
-- [ ] Connection tests successful
-- [ ] Error handling tested
-- [ ] Logging configured
-- [ ] Rate limits understood
-- [ ] Backup data sources configured
-- [ ] Cost monitoring set up
-- [ ] Documentation reviewed
+- [ ] `pip install ddgs` (not `duckduckgo-search`)
+- [ ] `NEWSAPI_KEY` set for best news quality
+- [ ] `sentiment_agent.py` replaced with `sentiment_agent_enhanced.py`
+- [ ] `financial_agents.py` is the strict-JSON version
+- [ ] `python setup_verification.py` passes
+- [ ] `python test_azure_connection.py` passes
 
 ---
 
-## 📊 System Requirements
+## 📦 Requirements
 
-**Python:** 3.10 or higher (3.11+ recommended)
+```txt
+# Core
+agent-framework
+requests
+python-dotenv
+fastmcp
+pydantic
 
-**Dependencies:**
-- agent-framework
-- requests
-- python-dotenv
-- fastmcp
-- pydantic
+# Web search — use NEW package name
+ddgs              # NOT duckduckgo-search
+feedparser
 
-**APIs:**
-- Azure OpenAI (required)
-- Financial Modeling Prep (required)
-- Alpha Vantage (optional, recommended)
+# Teams deployment
+botbuilder-core
+botbuilder-schema
+aiohttp
 
-**Storage:** ~100 MB for cache
-
-**Network:** Internet connection required
-
----
-
-## 🎉 Summary
-
-**Your Financial AI Agent System can:**
-- ✅ Analyze any stock with one command
-- ✅ Fetch data from multiple sources
-- ✅ Generate AI-powered recommendations
-- ✅ Create comprehensive SWOT analysis
-- ✅ Handle errors gracefully
-- ✅ Provide reliable fallback options
-
-**Just run:**
-```bash
-python magentic_agent_enhanced.py
+# Optional UI
+gradio
+streamlit
 ```
 
-**Enter a ticker, get complete insights in 1-2 minutes!**
+**Python 3.10+ required** (3.11+ recommended)
 
 ---
 
-**Version:** 2.0  
-**Last Updated:** February 2026  
-**License:** MIT  
-**Python:** 3.10+  
-**Status:** Production Ready ✅
+## 📄 License
+
+MIT — see [LICENSE](LICENSE)
+
+---
+
+<div align="center">
+  <strong>Version 3.0 · February 2026 · Python 3.10+ · Production Ready ✅</strong>
+</div>
